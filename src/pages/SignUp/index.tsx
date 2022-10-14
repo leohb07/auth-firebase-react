@@ -1,6 +1,5 @@
 import { Flex, Heading, Button, FormControl, FormLabel, Input, Alert, AlertIcon, Spinner } from "@chakra-ui/react";
 import { FormEvent, useEffect, useState } from "react";
-import { useAuthentication } from "../../hooks/useAuthentication";
 
 export function SignUp() {
   const [userName, setUserName] = useState('')
@@ -9,7 +8,6 @@ export function SignUp() {
   const [passwordConfirm, setPasswordConfirm] = useState('')
   const [error, setError] = useState('')
 
-  const { createUser, error: authError, loading, success } = useAuthentication()
 
   const handleSubmit = async (event: FormEvent) => {
     event?.preventDefault()
@@ -25,18 +23,12 @@ export function SignUp() {
       return setError('As senhas não são iguais!')
     }
 
-    const res = await createUser(user)
     setUserName('')
     setEmail('')
     setPassword('')
     setPasswordConfirm('')
   }
 
-  useEffect(() => {
-    if (authError) {
-      setError(authError)
-    }
-  }, [authError])
 
   return (
     <Flex w='100%' h='100vh' justify='center' align='center' flexDir='column' px='2'>
@@ -63,34 +55,18 @@ export function SignUp() {
           <Input type='password' value={passwordConfirm} onChange={(event) => setPasswordConfirm(event.target.value)} />
         </FormControl>
 
-        {!loading && <Button
+        <Button
           type='submit'
           mt='8'
           w='100%'
           colorScheme='green'>
           Cadastrar
-        </Button>}
-
-        {loading && <Button
-          type='submit'
-          mt='8'
-          w='100%'
-          colorScheme='green'>
-          <Spinner />
-        </Button>}
+        </Button>
 
         {error
           ? <Alert status='error' mt='6'>
             <AlertIcon />
             {error}
-          </Alert>
-          : null
-        }
-
-        {success
-          ? <Alert status='success' mt='6'>
-            <AlertIcon />
-            {success}
           </Alert>
           : null
         }
